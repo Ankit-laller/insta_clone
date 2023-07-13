@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/HomePage.dart';
 import 'package:insta_clone/screens/actionPage.dart';
@@ -6,7 +9,22 @@ import 'package:insta_clone/screens/profilePage.dart';
 import 'package:insta_clone/screens/searchPage.dart';
 import 'package:insta_clone/screens/signUpPage.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyCo-CeFoR60zgGxwABwhZpsVlL2polpEeQ",
+          appId: "1:530479599144:android:7bbfdbb125f0cbfb4baf1d",
+          messagingSenderId: "530479599144",
+          projectId: "insta-clone-2d443",
+          storageBucket: 'insta-clone-2d443.appspot.com'
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(const MyApp());
 }
 
@@ -21,6 +39,26 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
         debugShowCheckedModeBanner: false,
+        // home: StreamBuilder(
+        //   stream: FirebaseAuth.instance.authStateChanges(),
+        //   builder: (context, snapshot) {
+        //     if(snapshot.connectionState == ConnectionState.active){
+        //       if(snapshot.hasData){
+        //         return HomePage();
+        //       } else if (snapshot.hasError) {
+        //         return Center(
+        //           child: Text('${snapshot.error}'),
+        //         );
+        //       }
+        //     }
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return const Center(
+        //         child: CircularProgressIndicator(),
+        //       );
+        //     }
+        //     return LoginPage();
+        //   }
+        // ),
         initialRoute: "/Login",
         routes: {
           "/Login": (BuildContext context) => const LoginPage(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insta_clone/resources/auth_methods.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,7 +36,10 @@ class _HomePageState extends State<HomePage> {
               size: 20,
               color: Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () {
+              AuthMethods().signOut();
+              Navigator.pushNamed(context, "/Login");
+            },
           ),
           IconButton(
             icon: const Icon(
