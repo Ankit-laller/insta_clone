@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/HomePage.dart';
+import 'package:insta_clone/state_management/user_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../models/Users.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,20 +18,29 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+    addData();
     super.initState();
+  }
+
+
+  addData() async {
+    UserProvier userProvider =
+    Provider.of<UserProvier>(context, listen: false);
+    await userProvider.refreshUser();
   }
 
   @override
   Widget build(BuildContext context) {
+    Users user = Provider.of<UserProvier>(context).getUser;
     return Scaffold(
       appBar: AppBar(
 
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "user_name",
-          style: TextStyle(
+        title:  Text(
+          user.username !=null ?user.username :"username",
+          style: const TextStyle(
               fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
         ),
         actions: const [
@@ -55,11 +68,11 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                       margin: const EdgeInsets.only(top: 12),
                       width: 80.0,
                       height: 80.0,
-                      decoration: const BoxDecoration(
+                      decoration:  BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage('asset/image.jpg')),
+                            image: NetworkImage(user.imageUrl)),
                       ),
                     ),
                     Column(
@@ -131,19 +144,19 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     ),
                   ],
                 ),
-               const Row(
+                Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 12.0),
-                      child: Text("User Name"),
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Text(user.username),
                     ),
                   ],
                 ),
-                const Row(
+                 Row(
                   children:  [
                     Padding(
-                      padding: EdgeInsets.only(left: 12.0),
-                      child: Text("Flutter Developer"),
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Text(user.bio),
                     )
                   ],
                 ),
@@ -153,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   children: [
                     Container(
                         height: 35,
-                        width: 200,
+                        width: 180,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.grey.shade200),
@@ -167,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                             ))),
                     Container(
                         height: 35,
-                        width: 200,
+                        width: 180,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.grey.shade200),
