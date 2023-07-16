@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_clone/responsive/mobileScreenLayout.dart';
+import 'package:insta_clone/responsive/responsive_layout.dart';
+import 'package:insta_clone/responsive/webScreenLayout.dart';
 import 'package:insta_clone/screens/HomePage.dart';
 import 'package:insta_clone/screens/actionPage.dart';
 import 'package:insta_clone/screens/loginPage.dart';
@@ -50,7 +53,8 @@ class MyApp extends StatelessWidget {
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.active){
                 if(snapshot.hasData){
-                  return HomePage();
+                  return ResponsiveLayout(webScreenLayout: WebScreenLayout(),
+                      mobileScreenLayout: MobileScreenLayout());
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text('${snapshot.error}'),

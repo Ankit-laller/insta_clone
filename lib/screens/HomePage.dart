@@ -153,37 +153,7 @@ class _HomePageState extends State<HomePage> {
           post('asset/image.jpg', "emirorkcu"),
         ],
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-            },
-            icon:
-            const Icon(Icons.home_outlined, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/search");
-            },
-            icon: const Icon(Icons.search, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/actions");
-            },
-            icon: const Icon(Icons.favorite_border,
-                size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/profile");
-            },
-            icon:
-            const Icon(Icons.person, size: 32, color: Colors.black),
-          ),
-        ],
-      ),
+
     );
   }
 }

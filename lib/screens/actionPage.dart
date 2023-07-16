@@ -48,38 +48,7 @@ class _ActionPageState extends State<ActionPage> {
         centerTitle: false,
       ),
 
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/");
-            },
-            icon:
-            const Icon(Icons.home_outlined, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/search");
-            },
-            icon: const Icon(Icons.search, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/actions");
-            },
-            icon: const Icon(Icons.favorite_border,
-                size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/profil");
-            },
-            icon:
-            const Icon(Icons.person_outline, size: 32, color: Colors.black),
-          ),
-        ],
-      ),
+
     );
   }
 }

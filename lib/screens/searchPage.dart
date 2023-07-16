@@ -15,38 +15,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: getSearch(),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/home");
-            },
-            icon:
-            const Icon(Icons.home_outlined, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/search");
-            },
-            icon: const Icon(Icons.search, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/actions");
-            },
-            icon: const Icon(Icons.favorite_border,
-                size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/profile");
-            },
-            icon:
-            const Icon(Icons.person, size: 32, color: Colors.black),
-          ),
-        ],
-      ),
+
     );
   }
 

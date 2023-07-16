@@ -18,16 +18,11 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-    addData();
     super.initState();
   }
 
 
-  addData() async {
-    UserProvier userProvider =
-    Provider.of<UserProvier>(context, listen: false);
-    await userProvider.refreshUser();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -239,38 +234,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
 
 
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/home");
-            },
-            icon:
-            const Icon(Icons.home_outlined, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/search");
-            },
-            icon: const Icon(Icons.search, size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/actions");
-            },
-            icon: const Icon(Icons.favorite_border,
-                size: 32, color: Colors.black),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/profile");
-            },
-            icon:
-            const Icon(Icons.person, size: 32, color: Colors.black),
-          ),
-        ],
-      ),
+
     );
   }
   Widget  userPosts(){
@@ -314,5 +278,5 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         )
       ],
     );
-  }
-}
+  }}
+
