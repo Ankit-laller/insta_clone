@@ -191,19 +191,19 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      story('asset/image.jpg', "movie"),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      story('asset/image.jpg', "fun"),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 12.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     children: [
+                //       story('asset/image.jpg', "movie"),
+                //       const SizedBox(
+                //         width: 10,
+                //       ),
+                //       story('asset/image.jpg', "fun"),
+                //     ],
+                //   ),
+                // ),
 
               ],
             ),

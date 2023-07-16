@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insta_clone/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Users.dart';
+import '../resources/firestoreMethods.dart';
 import '../state_management/user_provider.dart';
 import '../utils/colors.dart';
 
@@ -19,6 +21,7 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
      Uint8List? _file;
      final TextEditingController _descriptionController = TextEditingController();
+      bool _isloading =false;
    _selectImage(BuildContext context) async{
      return showDialog(context: context, builder: (context){
        return SimpleDialog(
@@ -51,13 +54,44 @@ class _AddPostPageState extends State<AddPostPage> {
              child: const Text('Cancel '),
              onPressed: ()async{
                Navigator.of(context).pop();
-
              },
            ),
          ],
        );
      });
    }
+   void clearimage(){
+     _file =null;
+   }
+   @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+  void postImage(
+      String uid,
+      String username,
+      String profileImg
+      )async{
+     setState(() {
+       _isloading =true;
+     });
+     try{
+       String res = await FireStoreMethod().uploadPost(_descriptionController.text, _file!,
+           uid, username, profileImg);
+       if(res=="success"){
+         setState(() {
+           _isloading =false;
+         });
+         showSnackBar("image posted", context);
+         clearimage();
+       }else{
+         showSnackBar(res, context);
+       }
+     }catch(err){
+        showSnackBar(err.toString(), context);
+     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +116,9 @@ class _AddPostPageState extends State<AddPostPage> {
         ),
         centerTitle: false,
         actions: <Widget>[
-          TextButton(onPressed: (){},
+          TextButton(onPressed: (){
+            postImage(user.uid, user.username, user.imageUrl);
+          },
         child:Text(
               "Post",
               style: TextStyle(
@@ -95,9 +131,9 @@ class _AddPostPageState extends State<AddPostPage> {
       ),
       body: Column(
         children: <Widget>[
-          // isLoading
-          //     ? const LinearProgressIndicator()
-          //     : const Padding(padding: EdgeInsets.only(top: 0.0)),
+          _isloading
+              ? const LinearProgressIndicator()
+              : const Padding(padding: EdgeInsets.only(top: 0.0)),
           const Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
