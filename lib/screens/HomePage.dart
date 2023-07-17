@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/resources/auth_methods.dart';
+import 'package:insta_clone/utils/post_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,9 +56,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(height: 10,),
+      // body: ListView(
+      //   children: <Widget>[
+      //     SizedBox(height: 10,),
           // Padding(
           //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
           //   child: Row(
@@ -148,13 +150,29 @@ class _HomePageState extends State<HomePage> {
           //     ],
           //   ),
           // ),
-          post('asset/image.jpg', "talha.bayrakci"),
-          post('asset/image.jpg', "Nergis Bırasoglu"),
-          post('asset/image.jpg', "barbara_palvin"),
-          post('asset/image.jpg', "emirorkcu"),
-        ],
+    //       PostCard(),
+    //       PostCard(),
+    //       PostCard(),
+    //       PostCard(),
+    //     ],
+    //   ),
+    //
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("posts").snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) => PostCard(
+                snap: snapshot.data!.docs[index].data(),
+              )
+              );
+        },
       ),
-
     );
   }
 }
@@ -191,63 +209,5 @@ class _HomePageState extends State<HomePage> {
 //   );
 // }
 
-Widget post(String image, name) {
-  return Container(
-    decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey.withOpacity(.3)))),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        ListTile(
-          leading: const CircleAvatar(
-            backgroundImage: AssetImage('asset/image.jpg'),
-          ),
-          title: Text(
-            name,
-            style: TextStyle(
-                color: Colors.black.withOpacity(.8),
-                fontWeight: FontWeight.w400,
-                fontSize: 21),
-          ),
-          trailing: const Icon(Icons.more_vert),
-        ),
-        Image.asset(
-          image,
-          fit: BoxFit.cover,
-          width: double.infinity,
-        ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.favorite_border, size: 31),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Icon(Icons.comment_sharp, size: 31),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Icon(Icons.send, size: 31),
-                ],
-              ),
-              Icon(Icons.bookmark_border, size: 31)
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-          child: Text(
-            'liked by you and 385 others',
-            style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(.8)),
-          ),
-        )
-      ],
-    ),
-  );
-  }
+
 
