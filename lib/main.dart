@@ -7,6 +7,7 @@ import 'package:insta_clone/responsive/responsive_layout.dart';
 import 'package:insta_clone/responsive/webScreenLayout.dart';
 import 'package:insta_clone/screens/HomePage.dart';
 import 'package:insta_clone/screens/actionPage.dart';
+import 'package:insta_clone/screens/comment_screen.dart';
 import 'package:insta_clone/screens/loginPage.dart';
 import 'package:insta_clone/screens/profilePage.dart';
 import 'package:insta_clone/screens/searchPage.dart';

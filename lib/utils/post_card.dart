@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/models/Users.dart';
 import 'package:insta_clone/resources/firestoreMethods.dart';
+import 'package:insta_clone/screens/comment_screen.dart';
 import 'package:insta_clone/state_management/user_provider.dart';
 import 'package:insta_clone/utils/colors.dart';
 import 'package:insta_clone/utils/like_animation.dart';
@@ -105,7 +106,12 @@ class _PostCardState extends State<PostCard> {
                     ),
 
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context)=>CommentScreen(postId: widget.snap['postId'].toString(),))
+                        );
+                      },
                       icon:const Icon(Icons.comment_sharp),
                       iconSize: 31,
                     ),
@@ -160,6 +166,9 @@ class _PostCardState extends State<PostCard> {
                 style: TextStyle(fontSize: 15,color: CupertinoColors.black),
               ),
             ),
+            onTap: (){
+
+            },
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 4.0),
