@@ -6,7 +6,6 @@ import 'package:insta_clone/screens/addPost.dart';
 import 'package:insta_clone/screens/profilePage.dart';
 import 'package:insta_clone/screens/searchPage.dart';
 
-import '../resources/auth_methods.dart';
 import '../utils/colors.dart';
 
 class MobileScreenLayout extends StatefulWidget {
@@ -90,8 +89,8 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
       body: PageView(
         controller: pageController,
         onPageChanged: onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
             HomePage(),
           SearchPage(),
           AddPostPage(),
@@ -102,7 +101,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
       ),
       bottomNavigationBar: CupertinoTabBar(
         
-        backgroundColor: mobileBackgroundColor,
+        backgroundColor: Colors.black,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(

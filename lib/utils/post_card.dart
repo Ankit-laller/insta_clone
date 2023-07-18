@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:insta_clone/screens/comment_screen.dart';
 import 'package:insta_clone/state_management/user_provider.dart';
 import 'package:insta_clone/utils/colors.dart';
 import 'package:insta_clone/utils/like_animation.dart';
+import 'package:insta_clone/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +23,25 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isAnimating = false;
-  @override
+  int commentLen =0;
+ @override
+  void setState(VoidCallback fn) {
+    getComments();
+    super.setState(fn);
+  }
 
+  void getComments()async{
+   try{
+    QuerySnapshot snap = await FirebaseFirestore.instance.collection("posts").doc(widget.snap['postId']).collection("comments").get();
+     commentLen = snap.docs.length;
+   }catch(err){
+     showSnackBar(err.toString(), context);
+   }
+   setState(() { getComments();});
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final Users user = Provider.of<UserProvier>(context).getUser;
     return Container(
@@ -43,7 +62,43 @@ class _PostCardState extends State<PostCard> {
                   fontWeight: FontWeight.w400,
                   fontSize: 21),
             ),
-            trailing: const Icon(Icons.more_vert),
+            trailing:widget.snap['uid'].toString() == user.uid? IconButton(
+              onPressed: () {
+                showDialog(
+                  useRootNavigator: false,
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      child: ListView(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16),
+                          shrinkWrap: true,
+                          children: [
+                            'Delete',
+                          ]
+                              .map(
+                                (e) => InkWell(
+                                child: Container(
+                                  padding:
+                                  const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 16),
+                                  child: Text(e),
+                                ),
+                                onTap: () async{
+                                  FireStoreMethod().deletePost(
+                                    widget.snap['postId']);
+                                    showSnackBar("post deleted", context);
+                                  Navigator.of(context).pop();
+                                }),
+                          )
+                              .toList()),
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.more_vert),
+            ):Icon(Icons.arrow_back)
           ),
           GestureDetector(
             onDoubleTap: ()async{
@@ -162,7 +217,7 @@ class _PostCardState extends State<PostCard> {
               padding: EdgeInsets.symmetric(vertical: 4.0),
               margin: const EdgeInsets.only(left: 12),
               child: Text(
-                "View all 200 comments",
+                "View all ${commentLen} comments",
                 style: TextStyle(fontSize: 15,color: CupertinoColors.black),
               ),
             ),

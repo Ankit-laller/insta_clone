@@ -39,7 +39,8 @@ class _CommentScreenState extends State<CommentScreen> {
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-        .collection("posts").doc(widget.postId).collection('comments').snapshots(),
+        .collection("posts").doc(widget.postId).collection('comments')
+            .orderBy("datePublished", descending: true).snapshots(),
         builder: (context, snapshot){
           if(snapshot.connectionState ==ConnectionState.waiting){
             return const Center(

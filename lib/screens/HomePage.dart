@@ -158,7 +158,8 @@ class _HomePageState extends State<HomePage> {
     //   ),
     //
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("posts").snapshots(),
+        stream: FirebaseFirestore.instance.collection("posts")
+            .orderBy("datePublished", descending: true).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
           if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(
@@ -166,9 +167,9 @@ class _HomePageState extends State<HomePage> {
             );
           }
           return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
+            itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) => PostCard(
-                snap: snapshot.data!.docs[index].data(),
+                snap: snapshot.data?.docs[index].data(),
               )
               );
         },

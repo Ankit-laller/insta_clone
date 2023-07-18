@@ -48,7 +48,9 @@ class _CommentCardState extends State<CommentCard> {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  "17/7/2023",
+                  DateFormat.yMMMd().format(
+                      widget.snap['datePublished'].toDate()
+                  ),
                   style: const TextStyle(
                     fontSize: 12, fontWeight: FontWeight.w400,color: Colors.black),
                 ),
@@ -59,9 +61,10 @@ class _CommentCardState extends State<CommentCard> {
         ),
         Container(
           padding: const EdgeInsets.all(8),
-          child: const Icon(
-            Icons.favorite,
-            size: 16,
+          child:  IconButton(
+            icon: Icon(Icons.favorite),
+            iconSize: 16,
+            onPressed: () {  },
           ),
         )
       ],
