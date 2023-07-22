@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
             "/home" : (BuildContext context)=> const HomePage(),
             "/search": (BuildContext context) => const SearchPage(),
             "/actions": (BuildContext context) => const ActionPage(),
-            "/profile": (BuildContext context) => const ProfilePage(),
+            "/profile": (BuildContext context) =>  ProfilePage(uid: FirebaseAuth.instance.currentUser!.uid),
             "/SignUp": (BuildContext context)=> const SignUpPage(),
           }),
     );

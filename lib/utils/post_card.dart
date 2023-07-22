@@ -98,7 +98,7 @@ class _PostCardState extends State<PostCard> {
                 );
               },
               icon: const Icon(Icons.more_vert),
-            ):Icon(Icons.arrow_back)
+            ): Text("") //judaag :)
           ),
           GestureDetector(
             onDoubleTap: ()async{

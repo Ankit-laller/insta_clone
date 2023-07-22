@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_clone/screens/HomePage.dart';
@@ -90,12 +91,12 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         controller: pageController,
         onPageChanged: onPageChanged,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [
+        children:  [
             HomePage(),
           SearchPage(),
           AddPostPage(),
           ActionPage(),
-          ProfilePage()
+          ProfilePage(uid: FirebaseAuth.instance.currentUser!.uid),
 
         ],
       ),

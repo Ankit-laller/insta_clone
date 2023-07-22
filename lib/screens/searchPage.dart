@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../models/category.dart';
-import '../utils/search_json.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:insta_clone/screens/profilePage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -11,86 +12,72 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  TextEditingController _searchController = TextEditingController();
+  bool showUser = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: getSearch(),
-
-    );
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: TextFormField(
+            controller: _searchController,
+            decoration: InputDecoration(
+                labelText: 'Search user',
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.black.withOpacity(0.3),
+                )),
+            style: const TextStyle(color: Colors.black),
+            onFieldSubmitted: (String _) {
+              setState(() {
+                showUser = true;
+              });
+            },
+          ),
+        ),
+        body: showUser
+            ? FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection("users")
+                    .where("username",
+                        isGreaterThanOrEqualTo: _searchController.text)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+                  return ListView.builder(
+                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          child: ListTile(
+                            onTap: (){Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context)=> ProfilePage(
+                                    uid: (snapshot.data! as dynamic).docs[index]['uid'])));},
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  (snapshot.data! as dynamic).docs[index]
+                                      ['imageUrl']),
+                            ),
+                            title: Text(
+                              (snapshot.data! as dynamic).docs[index]['username'],
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        );
+                      });
+                },
+              )
+            : FutureBuilder(
+                future: FirebaseFirestore.instance.collection("posts").get(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Text("");
+                }));
   }
-
-  Widget getSearch() {
-    var size = MediaQuery.of(context).size;
-    return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SafeArea(
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
-                      width: size.width - 30,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.black.withOpacity(0.3),
-                            )),
-                        style: TextStyle(color: Colors.black.withOpacity(0.3)),
-                        cursorColor: Colors.black.withOpacity(0.3),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Row(
-                    children: List.generate(searchCategories.length, (index) {
-                      return CategoryStoryItem(
-                        name: searchCategories[index],
-                      );
-                    })),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Wrap(
-              spacing: 1,
-              runSpacing: 1,
-              children: List.generate(searchImage.length, (index) {
-                return Container(
-                  width: (size.width - 3) / 3,
-                  height: (size.width - 3) / 3,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(searchImage[index]),
-                          fit: BoxFit.cover)),
-                );
-              }),
-            )
-          ],
-        ));
-  }
-
 }
