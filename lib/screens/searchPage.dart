@@ -62,7 +62,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             title: Text(
                               (snapshot.data! as dynamic).docs[index]['username'],
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                         );

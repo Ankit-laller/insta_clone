@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_clone/resources/firestoreMethods.dart';
 import 'package:insta_clone/state_management/user_provider.dart';
 import 'package:insta_clone/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -80,16 +82,16 @@ class _ProfilePageState extends State<ProfilePage>
           style: const TextStyle(
               fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
         ),
-        actions: const [
+        actions:  [
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.menu,
+                icon: const Icon(
+                  Icons.logout,
                   size: 30,
                   color: Colors.black,
                 ),
+                onPressed:  () {FirebaseAuth.instance.signOut();},
               ))
         ],
       ),
@@ -145,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     //         const FollowPage()));
                                   },
                                   child:  Text(
-                                    userData['followers'].length.toString(),
+                                    followers.toString(),
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),
@@ -169,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       //         builder: (context) =>
                                       //         const FollowPage()));
                                     },
-                                    child:  Text(userData['following'].length.toString(),
+                                    child:  Text(following.toString(),
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black))),
@@ -182,10 +184,11 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ],
                 ),
+                SizedBox(height: 10,),
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
+                      padding: const EdgeInsets.only(left: 16.0),
                       child: Text(userData['username']),
                     ),
                   ],
@@ -193,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage>
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
+                      padding: const EdgeInsets.only(left: 16.0),
                       child: Text(userData['bio']),
                     )
                   ],
@@ -226,11 +229,13 @@ class _ProfilePageState extends State<ProfilePage>
                           border: Border.all(color: Colors.grey.shade200),
                         ),
                         child: TextButton(
-                            onPressed: () {},
                             child: const Text(
                               "Share Profile",
                               style: TextStyle(color: Colors.black),
-                            ))),
+                            ),
+                          onPressed: () {
+
+                          },),),
                   ],
                 ): isFollowing? Container(
                     height: 35,
@@ -241,10 +246,17 @@ class _ProfilePageState extends State<ProfilePage>
                       border: Border.all(color: Colors.grey.shade200),
                     ),
                     child: TextButton(
-                        onPressed: () {},
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.blue, // Background Color
                         ),
+                        onPressed: () async{
+                          await FireStoreMethod().followUser(FirebaseAuth.instance.currentUser!.uid,
+                              userData['uid']);
+                          setState(() {
+                            isFollowing = false;
+                            followers--;
+                          });
+                        },
                         child: const Text(
                           "Unfollow",
                           style: TextStyle(color: Colors.black),
@@ -256,7 +268,14 @@ class _ProfilePageState extends State<ProfilePage>
                       border: Border.all(color: Colors.grey.shade200),
                     ),
                     child: TextButton(
-                        onPressed: () {},
+                        onPressed: () async{
+                          await FireStoreMethod().followUser(FirebaseAuth.instance.currentUser!.uid,
+                              userData['uid']);
+                          setState(() {
+                            isFollowing = true;
+                            followers++;
+                          });
+                        },
                         child: const Text(
                           "Follow",
                           style: TextStyle(color: Colors.black),
@@ -314,44 +333,37 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget userPosts() {
-    return const Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                  width: 120,
-                  height: 150,
-                  child: Image(
-                    image: AssetImage("asset/image.jpg"),
-                    fit: BoxFit.contain,
+    return FutureBuilder(
+      future: FirebaseFirestore.instance.collection("posts")
+          .where('uid', isEqualTo: widget.uid).get(),
+      builder: (context, snapshot){
+        if(snapshot.connectionState ==ConnectionState.waiting){
+          return const Center(child: CircularProgressIndicator());
+        }
+        return GridView.builder(
+            shrinkWrap: true,
+            itemCount: (snapshot.data! as dynamic).docs.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 1.5,
+            childAspectRatio: 1),
+            itemBuilder: (context,index){
+              DocumentSnapshot snap= (snapshot.data! as dynamic).docs[index];
+              return  Container(
+                  decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200
                   )),
-              SizedBox(
-                width: 5,
-              ),
-              SizedBox(
-                  width: 120,
-                  height: 150,
                   child: Image(
-                    image: AssetImage("asset/image.jpg"),
-                    fit: BoxFit.contain,
-                  )),
-              SizedBox(
-                width: 5,
-              ),
-              SizedBox(
-                  width: 120,
-                  height: 150,
-                  child: Image(
-                    image: AssetImage("asset/image.jpg"),
-                    fit: BoxFit.contain,
-                  ))
-            ],
-          ),
-        )
-      ],
+                    image: NetworkImage(
+                      snap['postUrl']
+                    ),
+                    fit: BoxFit.cover,
+
+                  ),
+                );
+
+            });
+      },
     );
   }
 }
