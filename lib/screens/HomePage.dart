@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:insta_clone/resources/auth_methods.dart';
 import 'package:insta_clone/utils/post_card.dart';
 
@@ -27,10 +28,8 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          "Instagram",
-          style:
-          TextStyle(fontFamily: "Genel", fontSize: 30, color: Colors.black),
+        title: SvgPicture.asset("asset/instagram-text-icon.svg",
+          height: 40,
         ),
         actions: <Widget>[
           IconButton(

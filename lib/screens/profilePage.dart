@@ -323,7 +323,7 @@ class _ProfilePageState extends State<ProfilePage>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [userPosts(), const Text('Person')],
+                children: [userPosts(widget.uid), const Text('Person')],
               ),
             ),
           ],
@@ -332,38 +332,5 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget userPosts() {
-    return FutureBuilder(
-      future: FirebaseFirestore.instance.collection("posts")
-          .where('uid', isEqualTo: widget.uid).get(),
-      builder: (context, snapshot){
-        if(snapshot.connectionState ==ConnectionState.waiting){
-          return const Center(child: CircularProgressIndicator());
-        }
-        return GridView.builder(
-            shrinkWrap: true,
-            itemCount: (snapshot.data! as dynamic).docs.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 1.5,
-            childAspectRatio: 1),
-            itemBuilder: (context,index){
-              DocumentSnapshot snap= (snapshot.data! as dynamic).docs[index];
-              return  Container(
-                  decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200
-                  )),
-                  child: Image(
-                    image: NetworkImage(
-                      snap['postUrl']
-                    ),
-                    fit: BoxFit.cover,
 
-                  ),
-                );
-
-            });
-      },
-    );
-  }
 }
